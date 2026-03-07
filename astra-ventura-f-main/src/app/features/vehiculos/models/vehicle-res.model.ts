@@ -5,7 +5,7 @@ export interface CreateVehicleRes {
     kmPerLiter: number;
 }
 
-export interface FleetAllocationResultReq {
+export interface FleetAllocationResultRes {
     isPossible: boolean;
     totalVehiclesNeeded: number;
     vehicleBreakdown: Record<string, number>;
