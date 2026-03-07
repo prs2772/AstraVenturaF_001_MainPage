@@ -7,6 +7,7 @@ import { CredentialsReq, RefreshTokenReq, RegisterNewReq } from '../../features/
 import { AuthRes } from '../../features/auth/models/auth-res.model';
 import { PersonIdentity } from '../../shared/models/person-identity';
 import { AuthMapper } from '../../shared/utils/mappers/auth.mapper';
+import { StorageUtil } from '../../shared/utils/storage.util';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -49,20 +50,20 @@ export class AuthService {
 
   // Cerrar mi sesión
   logout(): void {
-    localStorage.removeItem(this.ACCESS_KEY);
-    localStorage.removeItem(this.REFRESH_KEY);
-    localStorage.removeItem(this.USER_KEY);
+    StorageUtil.remove(this.ACCESS_KEY);
+    StorageUtil.remove(this.REFRESH_KEY);
+    StorageUtil.remove(this.USER_KEY);
     this.currentUserSubject.next(null);
     this.router.navigate(['/auth/login']);
   }
 
   // Interceptor - getters
   getAccessToken(): string | null {
-    return localStorage.getItem(this.ACCESS_KEY);
+    return StorageUtil.get(this.ACCESS_KEY);
   }
 
   getRefreshToken(): RefreshTokenReq | null {
-    const token = localStorage.getItem(this.REFRESH_KEY);
+    const token = StorageUtil.get(this.REFRESH_KEY);
     if (!token) {
       return null;
     }
@@ -70,7 +71,7 @@ export class AuthService {
   }
 
   saveAccessToken(token: string): void {
-    localStorage.setItem(this.ACCESS_KEY, token);
+    StorageUtil.set(this.ACCESS_KEY, token);
   }
 
   // Obtención de estado de sesión
@@ -84,14 +85,14 @@ export class AuthService {
 
   // Métodos privados
   private saveSession(res: AuthRes): void {
-    localStorage.setItem(this.ACCESS_KEY, res.accessToken);
-    localStorage.setItem(this.REFRESH_KEY, res.refreshToken);
-    localStorage.setItem(this.USER_KEY, JSON.stringify(AuthMapper.toPersonIdentity(res)));
+    StorageUtil.set(this.ACCESS_KEY, res.accessToken);
+    StorageUtil.set(this.REFRESH_KEY, res.refreshToken);
+    StorageUtil.set(this.USER_KEY, JSON.stringify(AuthMapper.toPersonIdentity(res)));
     this.currentUserSubject.next(AuthMapper.toPersonIdentity(res));
   }
 
   private loadUser(): PersonIdentity | null {
-    const raw = localStorage.getItem(this.USER_KEY);
+    const raw = StorageUtil.get(this.USER_KEY);
     return raw ? JSON.parse(raw) : null;
   }
 }

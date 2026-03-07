@@ -1,0 +1,31 @@
+:host {
+  --sidebar-width: 240px;
+  --sidebar-width-collapsed: 64px;
+  --navbar-height: 60px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.av-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #080a0f;
+}
+
+.av-layout__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  transition: margin-left var(--transition);
+  min-width: 0;
+}
+
+.av-layout--collapsed .av-layout__body {
+  margin-left: var(--sidebar-width-collapsed);
+}
+
+.av-layout__main {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+}

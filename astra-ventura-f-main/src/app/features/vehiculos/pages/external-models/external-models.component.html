@@ -1,0 +1,91 @@
+<div class="av-page">
+
+  <div class="av-page__header">
+    <div>
+      <h1 class="av-page__title">External Models</h1>
+      <p class="av-page__subtitle">NHTSA — Official U.S. Government Vehicle Database</p>
+    </div>
+  </div>
+
+  <!-- Search form -->
+  <div class="av-glass-panel">
+    <div class="av-glass-panel__scanner"></div>
+
+    <form [formGroup]="form" (ngSubmit)="onSearch()" class="av-form" novalidate>
+      <div class="av-field" [class.av-field--error]="make.invalid && make.touched">
+        <label class="av-label">Vehicle Manufacturer</label>
+        <div class="av-search-wrap">
+          <div class="av-input-wrap" style="flex:1">
+            <span class="av-input-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            </span>
+            <input class="av-input" type="text" formControlName="make"
+              placeholder="tesla, ford, honda..." autocomplete="off"/>
+          </div>
+          <button class="av-btn av-btn--primary" type="submit" [disabled]="loading">
+            <span class="av-spinner-sm" *ngIf="loading"></span>
+            <svg *ngIf="!loading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            {{ loading ? 'Scanning...' : 'Search' }}
+          </button>
+        </div>
+        <span class="av-field-error" *ngIf="make.errors?.['required'] && make.touched">
+          Manufacturer name required
+        </span>
+      </div>
+    </form>
+  </div>
+
+  <!-- Loading -->
+  <div class="av-state-center" *ngIf="loading">
+    <span class="av-spinner-lg"></span>
+    <p class="av-state-label">Querying NHTSA database...</p>
+  </div>
+
+  <!-- Error -->
+  <div class="av-alert av-alert--error" *ngIf="error && !loading">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    {{ error }}
+  </div>
+
+  <!-- Empty result -->
+  <div class="av-state-center" *ngIf="!loading && !error && searchedMake && models.length === 0">
+    <svg class="av-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <p class="av-state-label">No models found for "{{ searchedMake }}"</p>
+  </div>
+
+  <!-- Results table -->
+  <div *ngIf="!loading && models.length > 0">
+    <p class="av-section-label">
+      {{ models.length }} models found for "{{ searchedMake | uppercase }}"
+    </p>
+    <div class="av-table-wrap">
+      <table class="av-table">
+        <thead>
+          <tr>
+            <th>Model ID</th>
+            <th>Model Name</th>
+            <th>Make ID</th>
+            <th>Manufacturer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let m of models">
+            <td>{{ m.Model_ID }}</td>
+            <td>{{ m.Model_Name }}</td>
+            <td>{{ m.Make_ID }}</td>
+            <td>{{ m.Make_Name }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

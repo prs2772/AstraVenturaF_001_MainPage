@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { StorageUtil } from '../../shared/utils/storage.util';
 import {
     HttpEvent,
     HttpHandler,
@@ -77,7 +78,9 @@ export class JwtInterceptor implements HttpInterceptor {
                 catchError(err => {
 
                     this.isRefreshing = false;
-                    this.authService.logout();
+                    if (StorageUtil.get('access_token')) {  // solo logout si había sesión
+                        this.authService.logout();
+                    }
 
                     return throwError(() => err);
 

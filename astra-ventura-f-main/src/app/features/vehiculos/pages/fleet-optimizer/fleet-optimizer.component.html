@@ -1,0 +1,130 @@
+<div class="av-page">
+
+  <div class="av-page__header">
+    <div>
+      <h1 class="av-page__title">Fleet Optimizer</h1>
+      <p class="av-page__subtitle">Calculate optimal vehicle assignment for passenger transport</p>
+    </div>
+  </div>
+
+  <!-- Algorithm selector -->
+  <div class="av-tabs">
+    <button class="av-tab" [class.av-tab--active]="mode === 'simple'" (click)="setMode('simple')">
+      Greedy — Largest First
+    </button>
+    <button class="av-tab" [class.av-tab--active]="mode === 'advanced'" (click)="setMode('advanced')">
+      Dynamic Programming — Optimal
+    </button>
+  </div>
+
+  <!-- Algorithm description -->
+  <div class="av-algo-info">
+    <ng-container *ngIf="mode === 'simple'">
+      <p class="av-algo-info__text">
+        <strong>Greedy algorithm:</strong> assigns passengers using the largest vehicles first. Fast but may not find
+        the minimum number of vehicles.
+      </p>
+    </ng-container>
+    <ng-container *ngIf="mode === 'advanced'">
+      <p class="av-algo-info__text">
+        <strong>Dynamic Programming:</strong> finds the perfect combination prioritizing fewer vehicles and better fuel
+        efficiency. Computationally heavier but optimal.
+      </p>
+    </ng-container>
+  </div>
+
+  <!-- Form -->
+  <div class="av-glass-panel">
+    <div class="av-glass-panel__scanner"></div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="av-form" novalidate>
+      <div class="av-field" [class.av-field--error]="passengers.invalid && passengers.touched">
+        <label class="av-label">Total Passengers</label>
+        <div class="av-input-wrap">
+          <span class="av-input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 00-3-3.87" />
+              <path d="M16 3.13a4 4 0 010 7.75" />
+            </svg>
+          </span>
+          <input class="av-input" type="number" formControlName="totalPassengers" placeholder="45" min="1" />
+        </div>
+        <span class="av-field-error" *ngIf="passengers.errors?.['required'] && passengers.touched">
+          Passenger count required
+        </span>
+        <span class="av-field-error" *ngIf="passengers.errors?.['min'] && passengers.touched">
+          Must be at least 1 passenger
+        </span>
+      </div>
+
+      <div class="av-form-submit">
+        <button class="av-btn av-btn--primary" type="submit" [disabled]="loading">
+          <span class="av-spinner-sm" *ngIf="loading"></span>
+          <svg *ngIf="!loading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+          {{ loading ? 'Calculating...' : 'Optimize Fleet' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Error -->
+  <div class="av-alert av-alert--error" *ngIf="error">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
+    </svg>
+    {{ error }}
+  </div>
+
+  <!-- Result -->
+  <div class="av-result-panel" *ngIf="result">
+    <h3 class="av-result-panel__title">
+      Allocation Result
+      <span class="av-badge" [class.av-badge--success]="result.isPossible"
+        [class.av-badge--danger]="!result.isPossible">
+        {{ result.isPossible ? 'Possible' : 'Not Possible' }}
+      </span>
+    </h3>
+
+    <!-- Stats -->
+    <div class="av-result-stats">
+      <div class="av-result-stat">
+        <span class="av-stat__label">Vehicles Needed</span>
+        <span class="av-stat__value">{{ result.totalVehiclesNeeded }}</span>
+      </div>
+      <div class="av-result-stat">
+        <span class="av-stat__label">Avg Efficiency</span>
+        <span class="av-stat__value">{{ result.averageFleetKmPerLiter | number:'1.1-1' }} km/L</span>
+      </div>
+      <div class="av-result-stat">
+        <span class="av-stat__label">Passengers</span>
+        <span class="av-stat__value">{{ form.get('totalPassengers')?.value }}</span>
+      </div>
+    </div>
+
+    <!-- Breakdown -->
+    <div *ngIf="breakdown.length > 0">
+      <p class="av-section-label">Vehicle Breakdown</p>
+      <div class="av-breakdown-grid">
+        <div class="av-breakdown-item" *ngFor="let item of breakdown">
+          <span class="av-breakdown-item__count">{{ item.count }}x</span>
+          <span class="av-breakdown-item__name">{{ item.model }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detail list -->
+    <div *ngIf="result?.detailedList?.length?? 0 > 0">
+      <p class="av-section-label">Detailed Assignment</p>
+      <ul class="av-result-list">
+        <li *ngFor="let line of result.detailedList">{{ line }}</li>
+      </ul>
+    </div>
+  </div>
+
+</div>

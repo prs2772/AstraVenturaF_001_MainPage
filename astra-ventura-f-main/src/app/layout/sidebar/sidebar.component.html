@@ -1,0 +1,68 @@
+<aside class="av-sidebar" [class.av-sidebar--collapsed]="collapsed">
+
+  <!-- Brand -->
+  <div class="av-sidebar__brand">
+    <div class="av-sidebar__brand-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 2L8 8H2l4.5 7L4 21l8-3 8 3-2.5-6L22 8h-6L12 2z"/>
+      </svg>
+    </div>
+    <span class="av-sidebar__brand-name" *ngIf="!collapsed">AstraVentura</span>
+  </div>
+
+  <!-- Toggle button -->
+  <button class="av-sidebar__toggle" (click)="toggle()" [title]="collapsed ? 'Expand' : 'Collapse'">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline *ngIf="!collapsed" points="15 18 9 12 15 6"/>
+      <polyline *ngIf="collapsed"  points="9 18 15 12 9 6"/>
+    </svg>
+  </button>
+
+  <nav class="av-sidebar__nav">
+
+    <!-- Dashboard -->
+    <a routerLink="/"
+       routerLinkActive="av-nav-item--active"
+       [routerLinkActiveOptions]="{ exact: true }"
+       class="av-nav-item"
+       [title]="collapsed ? 'Dashboard' : ''">
+      <span class="av-nav-item__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="7" height="7"/>
+          <rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/>
+        </svg>
+      </span>
+      <span class="av-nav-item__label" *ngIf="!collapsed">Dashboard</span>
+    </a>
+
+    <!-- Dynamic categories -->
+    <div class="av-nav-category" *ngFor="let cat of menu">
+
+      <p class="av-nav-category__title" *ngIf="!collapsed">
+        {{ cat.category }}
+      </p>
+      <div class="av-nav-category__divider" *ngIf="collapsed"></div>
+
+      <a *ngFor="let item of cat.items"
+         [routerLink]="item.route"
+         routerLinkActive="av-nav-item--active"
+         class="av-nav-item"
+         [title]="collapsed ? item.label : ''">
+        <span class="av-nav-item__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path [attr.d]="item.icon"/>
+          </svg>
+        </span>
+        <span class="av-nav-item__label" *ngIf="!collapsed">{{ item.label }}</span>
+      </a>
+
+    </div>
+
+  </nav>
+
+  <!-- Bottom scanner line -->
+  <div class="av-sidebar__scanner"></div>
+
+</aside>

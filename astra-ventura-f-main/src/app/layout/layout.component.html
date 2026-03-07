@@ -1,0 +1,16 @@
+<div class="av-layout" [class.av-layout--collapsed]="sidebarCollapsed">
+
+  <app-sidebar
+    (toggleEvent)="onSidebarToggle($event)"
+    [collapsed]="sidebarCollapsed">
+  </app-sidebar>
+
+  <div class="av-layout__body">
+    <app-navbar></app-navbar>
+
+    <main class="av-layout__main">
+      <router-outlet />
+    </main>
+  </div>
+
+</div>

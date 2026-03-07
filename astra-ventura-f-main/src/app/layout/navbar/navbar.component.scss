@@ -1,0 +1,135 @@
+:host {
+  --primary: #135bec;
+  --primary-border: rgba(19, 91, 236, 0.2);
+  --bg-dark: #080a0f;
+  --text-main: #e8eaf0;
+  --text-muted: #4a5568;
+  --text-sub: #8892a4;
+  --font-mono: 'Space Mono', monospace;
+  --navbar-height: 60px;
+}
+
+.av-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--navbar-height);
+  padding: 0 1.5rem;
+  background: rgba(8, 10, 15, 0.8);
+  border-bottom: 1px solid var(--primary-border);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* Left */
+.av-navbar__left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.av-navbar__dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 6px rgba(19, 91, 236, 0.8);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.av-navbar__status {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(19, 91, 236, 0.6);
+}
+
+/* Right */
+.av-navbar__right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* User */
+.av-navbar__user {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.av-navbar__avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: rgba(19, 91, 236, 0.15);
+  border: 1px solid rgba(19, 91, 236, 0.3);
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px rgba(19, 91, 236, 0.2);
+}
+
+.av-navbar__username {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-sub);
+}
+
+/* Divider */
+.av-navbar__divider {
+  width: 1px;
+  height: 1.5rem;
+  background: var(--primary-border);
+}
+
+/* Logout */
+.av-navbar__logout {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  background: transparent;
+  border: 1px solid var(--primary-border);
+  border-radius: 0.375rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.av-navbar__logout:hover {
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.4);
+  background: rgba(248, 113, 113, 0.05);
+}
+
+.av-navbar__logout svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}

@@ -1,0 +1,83 @@
+<div class="av-page">
+
+  <!-- Header -->
+  <div class="av-page__header">
+    <div>
+      <h1 class="av-page__title">Fleet Registry</h1>
+      <p class="av-page__subtitle">All registered vehicles in the system</p>
+    </div>
+    <div class="av-page__actions">
+      <a routerLink="/vehiculos/modelos-externos" class="av-btn av-btn--ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        External Models
+      </a>
+      <a routerLink="/vehiculos/flota" class="av-btn av-btn--ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        Fleet Optimizer
+      </a>
+      <a routerLink="/vehiculos/crear" class="av-btn av-btn--primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Add Vehicle
+      </a>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="av-state-center" *ngIf="loading">
+    <span class="av-spinner-lg"></span>
+    <p class="av-state-label">Scanning fleet database...</p>
+  </div>
+
+  <!-- Error -->
+  <div class="av-alert av-alert--error" *ngIf="error && !loading">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    {{ error }}
+    <button class="av-alert__retry" (click)="load()">Retry</button>
+  </div>
+
+  <!-- Empty -->
+  <div class="av-state-center" *ngIf="!loading && !error && vehicles.length === 0">
+    <svg class="av-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+      <path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3"/>
+      <rect x="9" y="11" width="14" height="10" rx="2" ry="2"/>
+    </svg>
+    <p class="av-state-label">No vehicles registered</p>
+    <a routerLink="/vehiculos/crear" class="av-btn av-btn--primary av-btn--sm">Add First Vehicle</a>
+  </div>
+
+  <!-- Grid -->
+  <div class="av-vehicles-grid" *ngIf="!loading && !error && vehicles.length > 0">
+    <div class="av-vehicle-card" *ngFor="let v of vehicles">
+      <div class="av-vehicle-card__header">
+        <div class="av-vehicle-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11a2 2 0 012 2v3m-4 12h8a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="av-vehicle-card__name">{{ v.brand }} {{ v.model }}</h3>
+          <p class="av-vehicle-card__sub">Unit registered</p>
+        </div>
+      </div>
+      <div class="av-vehicle-card__stats">
+        <div class="av-stat">
+          <span class="av-stat__label">Price</span>
+          <span class="av-stat__value">${{ v.price | number:'1.0-0' }}</span>
+        </div>
+        <div class="av-stat">
+          <span class="av-stat__label">Efficiency</span>
+          <span class="av-stat__value">{{ v.kmPerLiter }} km/L</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,217 @@
+<div class="av-auth-wrapper">
+  <div class="av-nebula-bg"></div>
+  <div class="av-stars"></div>
+
+  <div class="av-layout">
+
+    <header class="av-header">
+      <div class="av-brand">
+        <div class="av-brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2L8 8H2l4.5 7L4 21l8-3 8 3-2.5-6L22 8h-6L12 2z" />
+          </svg>
+        </div>
+        <div>
+          <h2 class="av-brand-name">AstraVentura</h2>
+          <p class="av-brand-sub">Crew Registration v1.0</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="av-main">
+      <div class="av-panel-container">
+
+        <div class="av-hud-top">
+          <div class="av-hud-line">
+            <span class="av-hud-dot"></span>
+            <span class="av-hud-label">New Crew Onboarding</span>
+          </div>
+          <span class="av-hud-label">Clearance Level: 0</span>
+        </div>
+
+        <div class="av-glass-panel">
+          <div class="av-scanner-line"></div>
+
+          <div class="av-panel-header">
+            <h1 class="av-panel-title">Request Clearance</h1>
+            <p class="av-panel-subtitle">Register your identity in the galactic database</p>
+          </div>
+
+          <div class="av-error" *ngIf="error">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            {{ error }}
+          </div>
+
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" class="av-form" novalidate>
+
+            <!-- Nombre -->
+            <div class="av-field" [class.av-field--error]="nombre.invalid && nombre.touched">
+              <label class="av-label">Commander Designation</label>
+              <div class="av-input-wrap">
+                <span class="av-input-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                </span>
+                <input class="av-input" type="text" formControlName="nombre" placeholder="JOHN COMMANDER"
+                  autocomplete="name" />
+              </div>
+              <span class="av-field-error" *ngIf="nombre.errors?.['required'] && nombre.touched">
+                Designation required
+              </span>
+            </div>
+
+            <!-- Apellido Principal -->
+            <div class="av-field" [class.av-field--error]="apellidoPrincipal.invalid && apellidoPrincipal.touched">
+              <label class="av-label">Primary Surname</label>
+              <div class="av-input-wrap">
+                <span class="av-input-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                    <path d="M16 3.13a4 4 0 010 7.75" />
+                  </svg>
+                </span>
+                <input class="av-input" type="text" formControlName="apellidoPrincipal" placeholder="COMMANDER"
+                  autocomplete="family-name" />
+              </div>
+              <span class="av-field-error" *ngIf="apellidoPrincipal.errors?.['required'] && apellidoPrincipal.touched">
+                Primary surname required
+              </span>
+            </div>
+
+            <!-- Apellido Secundario -->
+            <div class="av-field" [class.av-field--error]="apellidoSecundario.invalid && apellidoSecundario.touched">
+              <label class="av-label">Secondary Surname</label>
+              <div class="av-input-wrap">
+                <span class="av-input-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                    <path d="M16 3.13a4 4 0 010 7.75" />
+                  </svg>
+                </span>
+                <input class="av-input" type="text" formControlName="apellidoSecundario" placeholder="GALAXY"
+                  autocomplete="additional-name" />
+              </div>
+              <span class="av-field-error"
+                *ngIf="apellidoSecundario.errors?.['required'] && apellidoSecundario.touched">
+                Secondary surname required
+              </span>
+            </div>
+
+            <!-- Email -->
+            <div class="av-field" [class.av-field--error]="email.invalid && email.touched">
+              <label class="av-label">Deep Space Identifier</label>
+              <div class="av-input-wrap">
+                <span class="av-input-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                  </svg>
+                </span>
+                <input class="av-input" type="email" formControlName="email" placeholder="COMMANDER@GALACTIC.NET"
+                  autocomplete="email" />
+              </div>
+              <span class="av-field-error" *ngIf="email.errors?.['required'] && email.touched">Identifier
+                required</span>
+              <span class="av-field-error" *ngIf="email.errors?.['email'] && email.touched">Invalid format</span>
+            </div>
+
+            <!-- Password -->
+            <div class="av-field" [class.av-field--error]="password.invalid && password.touched">
+              <label class="av-label">Security Cipher</label>
+              <div class="av-input-wrap">
+                <span class="av-input-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0110 0v4" />
+                  </svg>
+                </span>
+                <input class="av-input" [type]="showPassword ? 'text' : 'password'" formControlName="password"
+                  placeholder="••••••••••••" autocomplete="new-password" />
+                <button type="button" class="av-input-toggle" (click)="showPassword = !showPassword">
+                  <svg *ngIf="!showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  <svg *ngIf="showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path
+                      d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </svg>
+                </button>
+              </div>
+              <span class="av-field-error" *ngIf="password.errors?.['minlength'] && password.touched">
+                Min 6 characters required
+              </span>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="av-field" [class.av-field--error]="(confirmPassword.touched && form.errors?.['mismatch'])">
+              <label class="av-label">Confirm Cipher</label>
+              <div class="av-input-wrap">
+                <span class="av-input-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <polyline points="9 11 12 14 22 4" />
+                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                  </svg>
+                </span>
+                <input class="av-input" [type]="showConfirm ? 'text' : 'password'" formControlName="confirmPassword"
+                  placeholder="••••••••••••" autocomplete="new-password" />
+                <button type="button" class="av-input-toggle" (click)="showConfirm = !showConfirm">
+                  <svg *ngIf="!showConfirm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  <svg *ngIf="showConfirm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path
+                      d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24" />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </svg>
+                </button>
+              </div>
+              <span class="av-field-error" *ngIf="confirmPassword.touched && form.errors?.['mismatch']">
+                Ciphers do not match
+              </span>
+            </div>
+
+            <!-- Submit -->
+            <button class="av-btn-primary" type="submit" [disabled]="loading">
+              <span *ngIf="!loading">Initialize Crew Record</span>
+              <span *ngIf="loading" class="av-spinner"></span>
+              <svg *ngIf="!loading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <line x1="19" y1="8" x2="19" y2="14" />
+                <line x1="22" y1="11" x2="16" y2="11" />
+              </svg>
+            </button>
+
+          </form>
+        </div>
+
+        <p class="av-register-link">
+          Already have clearance? <a routerLink="/auth/login" class="av-link">Access Control</a>
+        </p>
+
+      </div>
+    </main>
+
+    <footer class="av-footer">
+      <span>© 2025 AstraVentura Division</span>
+      <div class="av-footer-coords">
+        <span>Lat: 19.4326 N</span>
+        <span>Long: 99.1332 W</span>
+      </div>
+    </footer>
+
+  </div>
+</div>
