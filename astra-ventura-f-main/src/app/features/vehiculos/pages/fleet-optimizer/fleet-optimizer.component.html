@@ -119,7 +119,7 @@
     </div>
 
     <!-- Detail list -->
-    <div *ngIf="result?.detailedList?.length?? 0 > 0">
+    <div *ngIf="result.detailedList.length > 0">
       <p class="av-section-label">Detailed Assignment</p>
       <ul class="av-result-list">
         <li *ngFor="let line of result.detailedList">{{ line }}</li>
