@@ -36,16 +36,25 @@ export class LoginComponent {
   togglePassword() { this.showPassword = !this.showPassword; }
 
   onSubmit() {
+    alert('PRE Enviando login...' + this.email.value + this.password.value);
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
 
     this.loading = true;
     this.error = null;
 
+    alert('Enviando login...' + this.email.value + this.password.value);
+
     this.authApi.login({
       email: this.email.value,
       password: this.password.value
     }).subscribe({
-      next: () => this.router.navigate(['/']),
+      next: (res) => {
+        console.log('Login response:', res);
+        console.log('Token en storage:', this.authApi.getAccessToken());
+        console.log('isLoggedIn:', this.authApi.isLoggedIn);
+        alert(this.authApi.getAccessToken());
+        this.router.navigate(['/']);
+      },
       error: err => {
         this.loading = false;
         this.error = err?.error?.message ?? 'Authentication failed. Check your credentials.';
