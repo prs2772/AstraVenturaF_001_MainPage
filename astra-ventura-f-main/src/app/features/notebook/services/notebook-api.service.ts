@@ -5,7 +5,7 @@ import { apis } from '../../../../environments/apis.environment';
 import { TopicRes } from '../models/topic-res.model';
 import { CreateTopicReq } from '../models/topic-req.model';
 import { NoteRes, SearchNoteRes } from '../models/note-res.model';
-import { CreateNoteReq, SearchNotesReq } from '../models/note-req.model';
+import { CreateNoteReq, UpdateNoteReq, SearchNotesReq } from '../models/note-req.model';
 
 @Injectable({ providedIn: 'root' })
 export class NotebookApiService {
@@ -14,9 +14,17 @@ export class NotebookApiService {
 
     constructor(private http: HttpClient) { }
 
-    // Topics
+    // ── Topics ──────────────────────────────────────────
+
+    /** Root topics (parentId = null) */
     getTopics() {
         return this.http.get<TopicRes[]>(`${this.base}/topics`);
+    }
+
+    /** Subtopics of a given parent */
+    getSubtopics(parentId: string) {
+        const params = new HttpParams().set('parentId', parentId);
+        return this.http.get<TopicRes[]>(`${this.base}/topics`, { params });
     }
 
     createTopic(req: CreateTopicReq) {
@@ -27,9 +35,14 @@ export class NotebookApiService {
         return this.http.delete<void>(`${this.base}/topics/${id}`);
     }
 
-    // Notes
+    // ── Notes ───────────────────────────────────────────
+
     createNote(req: CreateNoteReq) {
         return this.http.post<NoteRes>(`${this.base}/notes`, req);
+    }
+
+    updateNote(id: string, req: UpdateNoteReq) {
+        return this.http.put<NoteRes>(`${this.base}/notes/${id}`, req);
     }
 
     searchNotes(req: SearchNotesReq) {

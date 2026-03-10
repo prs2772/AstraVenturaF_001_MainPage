@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
@@ -18,16 +18,22 @@ export class LoginComponent {
   error: string | null = null;
   showPassword = false;
 
+  private returnUrl: string;
+
   constructor(
     private fb: FormBuilder,
     private authApi: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       remember: [false]
     });
+
+    // Captura la URL de retorno del guard, o redirige a home por defecto
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
   }
 
   get email() { return this.form.get('email')!; }
@@ -36,28 +42,28 @@ export class LoginComponent {
   togglePassword() { this.showPassword = !this.showPassword; }
 
   onSubmit() {
-    alert('PRE Enviando login...' + this.email.value + this.password.value);
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
 
     this.loading = true;
     this.error = null;
 
-    alert('Enviando login...' + this.email.value + this.password.value);
-
     this.authApi.login({
       email: this.email.value,
       password: this.password.value
     }).subscribe({
-      next: (res) => {
-        console.log('Login response:', res);
-        console.log('Token en storage:', this.authApi.getAccessToken());
-        console.log('isLoggedIn:', this.authApi.isLoggedIn);
-        alert(this.authApi.getAccessToken());
-        this.router.navigate(['/']);
+      next: () => {
+        this.router.navigateByUrl(this.returnUrl);
       },
       error: err => {
         this.loading = false;
-        this.error = err?.error?.message ?? 'Authentication failed. Check your credentials.';
+
+        if (err.status === 0) {
+          this.error = 'Unable to connect to server. Check your network or CORS configuration.';
+        } else if (err.status === 401) {
+          this.error = err?.error?.message ?? 'Invalid credentials. Check your email and password.';
+        } else {
+          this.error = err?.error?.message ?? `Server error (${err.status}). Try again later.`;
+        }
       }
     });
   }

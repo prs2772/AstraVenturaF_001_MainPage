@@ -1,0 +1,59 @@
+<div class="av-page">
+
+    <!-- Header -->
+    <div class="av-page__header">
+        <div>
+            <h1 class="av-page__title">Command Center</h1>
+            <p class="av-page__subtitle">AstraVentura ecosystem overview</p>
+        </div>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="av-home-stats">
+        <div class="av-home-stat" *ngFor="let s of stats">
+            <div class="av-home-stat__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path [attr.d]="s.icon" />
+                </svg>
+            </div>
+            <div>
+                <span class="av-home-stat__value">{{ s.value }}</span>
+                <span class="av-home-stat__label">{{ s.label }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section title -->
+    <div class="av-home-section">
+        <h2 class="av-home-section__title">Quick Access</h2>
+        <div class="av-home-section__line"></div>
+    </div>
+
+    <!-- Quick Access Grid -->
+    <div class="av-home-grid">
+        <a class="av-home-card" *ngFor="let card of cards" [routerLink]="card.route">
+
+            <div class="av-home-card__header">
+                <div class="av-home-card__icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path [attr.d]="card.icon" />
+                    </svg>
+                </div>
+                <h3 class="av-home-card__title">{{ card.title }}</h3>
+            </div>
+
+            <p class="av-home-card__desc">{{ card.description }}</p>
+
+            <div class="av-home-card__footer">
+                <span class="av-home-card__action">
+                    Open
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                </span>
+            </div>
+
+        </a>
+    </div>
+
+</div>

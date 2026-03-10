@@ -25,7 +25,18 @@ export const routes: Routes = [
             import('./layout/layout.component')
                 .then(m => m.LayoutComponent),
         children: [
-
+            {
+                path: 'home',
+                loadComponent: () =>
+                    import('./features/home/pages/home.component')
+                        .then(m => m.HomeComponent)
+            },
+            {
+                path: 'notebook',
+                loadComponent: () =>
+                    import('./features/notebook/pages/notebook.component')
+                        .then(m => m.NotebookComponent)
+            },
             {
                 path: 'vehiculos',
                 loadComponent: () =>
@@ -51,7 +62,7 @@ export const routes: Routes = [
                         .then(m => m.ExternalModelsComponent)
             },
 
-            { path: '', redirectTo: 'vehiculos', pathMatch: 'full' }
+            { path: '', redirectTo: 'home', pathMatch: 'full' }
         ]
     },
 

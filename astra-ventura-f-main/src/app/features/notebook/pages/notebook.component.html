@@ -1,0 +1,287 @@
+<div class="av-page av-notebook">
+
+    <!-- Header -->
+    <div class="av-page__header">
+        <div>
+            <h1 class="av-page__title">Notebook</h1>
+            <p class="av-page__subtitle">Knowledge workspace — topics &amp; notes</p>
+        </div>
+    </div>
+
+    <!-- Error -->
+    <div class="av-alert av-alert--error" *ngIf="error">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        {{ error }}
+        <button class="av-alert__retry" (click)="loadRootTopics()">Retry</button>
+    </div>
+
+    <!-- Two-panel layout -->
+    <div class="av-nb-layout">
+
+        <!-- ═══ LEFT: Topics Tree ═══ -->
+        <aside class="av-nb-sidebar">
+
+            <div class="av-nb-sidebar__header">
+                <span class="av-nb-sidebar__label">Topics</span>
+                <button class="av-nb-icon-btn" title="New root topic" (click)="showCreateTopic = !showCreateTopic">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Create root topic -->
+            <div class="av-nb-create-row" *ngIf="showCreateTopic">
+                <input class="av-nb-input" [(ngModel)]="newTopicName" placeholder="Topic name..."
+                    (keyup.enter)="createRootTopic()" />
+                <button class="av-nb-icon-btn av-nb-icon-btn--ok" (click)="createRootTopic()"
+                    [disabled]="creatingTopic">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                </button>
+                <button class="av-nb-icon-btn" (click)="showCreateTopic = false">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Loading -->
+            <div class="av-nb-empty" *ngIf="loadingTopics">
+                <span class="av-spinner-sm"></span>
+            </div>
+
+            <!-- Empty -->
+            <div class="av-nb-empty" *ngIf="!loadingTopics && topics.length === 0 && !error">
+                <p>No topics yet</p>
+            </div>
+
+            <!-- Topic list -->
+            <div class="av-nb-tree" *ngIf="!loadingTopics && topics.length > 0">
+                <ng-container *ngFor="let topic of topics">
+                    <ng-container *ngTemplateOutlet="topicTpl; context: { $implicit: topic, depth: 0 }"></ng-container>
+                </ng-container>
+            </div>
+
+            <!-- Recursive topic template -->
+            <ng-template #topicTpl let-topic let-depth="depth">
+                <div class="av-nb-topic" [class.av-nb-topic--selected]="selectedTopic?.id === topic.id"
+                    [style.padding-left.rem]="0.5 + depth * 0.75" (click)="selectTopic(topic, $event)">
+
+                    <!-- Expand arrow -->
+                    <button class="av-nb-expand" (click)="toggleTopic(topic); $event.stopPropagation()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            [class.av-nb-expand--open]="topic.expanded">
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                    </button>
+
+                    <span class="av-nb-topic__name">{{ topic.name }}</span>
+
+                    <!-- Actions -->
+                    <div class="av-nb-topic__actions">
+                        <button class="av-nb-icon-btn-xs" title="Add subtopic"
+                            (click)="startCreateSubtopic(topic.id, $event)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                        </button>
+                        <button class="av-nb-icon-btn-xs av-nb-icon-btn-xs--danger" title="Delete"
+                            (click)="deleteTopic(topic, $event)">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6" />
+                                <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                                <path d="M10 11v6" />
+                                <path d="M14 11v6" />
+                                <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Create subtopic inline -->
+                <div class="av-nb-create-row" *ngIf="subtopicParentId === topic.id"
+                    [style.padding-left.rem]="1.25 + depth * 0.75">
+                    <input class="av-nb-input" [(ngModel)]="newSubtopicName" placeholder="Subtopic name..."
+                        (keyup.enter)="createSubtopic(topic)" />
+                    <button class="av-nb-icon-btn av-nb-icon-btn--ok" (click)="createSubtopic(topic)"
+                        [disabled]="creatingSubtopic">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                    </button>
+                    <button class="av-nb-icon-btn" (click)="cancelCreateSubtopic()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Loading children spinner -->
+                <div class="av-nb-empty av-nb-empty--sm" *ngIf="topic.loadingChildren"
+                    [style.padding-left.rem]="1.25 + depth * 0.75">
+                    <span class="av-spinner-sm"></span>
+                </div>
+
+                <!-- Children -->
+                <ng-container *ngIf="topic.expanded && topic.children.length > 0">
+                    <ng-container *ngFor="let child of topic.children">
+                        <ng-container
+                            *ngTemplateOutlet="topicTpl; context: { $implicit: child, depth: depth + 1 }"></ng-container>
+                    </ng-container>
+                </ng-container>
+            </ng-template>
+
+        </aside>
+
+        <!-- ═══ RIGHT: Notes Panel ═══ -->
+        <main class="av-nb-main">
+
+            <!-- No topic selected -->
+            <div class="av-nb-placeholder" *ngIf="!selectedTopic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <path d="M4 19.5A2.5 2.5 0 016.5 17H20M4 19.5A2.5 2.5 0 014 17V4.5A2.5 2.5 0 016.5 2H20v20H6.5" />
+                </svg>
+                <p>Select a topic to view its notes</p>
+            </div>
+
+            <!-- Topic selected -->
+            <ng-container *ngIf="selectedTopic">
+
+                <!-- Notes toolbar -->
+                <div class="av-nb-toolbar">
+                    <h2 class="av-nb-toolbar__title">{{ selectedTopic.name }}</h2>
+                    <div class="av-nb-toolbar__actions">
+                        <div class="av-nb-search-wrap">
+                            <input class="av-nb-input" [(ngModel)]="searchTerm" placeholder="Search notes..."
+                                (keyup.enter)="onSearch()" />
+                            <button class="av-nb-icon-btn" (click)="onSearch()" [disabled]="searching" title="Search">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                </svg>
+                            </button>
+                            <button class="av-nb-icon-btn" *ngIf="searchResults" (click)="clearSearch()"
+                                title="Clear search">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                            </button>
+                        </div>
+                        <button class="av-btn av-btn--primary av-btn--sm" (click)="openNewNote()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            New Note
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search results -->
+                <ng-container *ngIf="searchResults">
+                    <div class="av-nb-section-label">
+                        Search results ({{ searchResults.length }})
+                    </div>
+                    <div class="av-nb-empty" *ngIf="searchResults.length === 0">
+                        <p>No results found</p>
+                    </div>
+                    <div class="av-nb-notes-grid" *ngIf="searchResults.length > 0">
+                        <div class="av-nb-note-card" *ngFor="let r of searchResults">
+                            <h3 class="av-nb-note-card__title">{{ r.title }}</h3>
+                            <p class="av-nb-note-card__snippet">{{ r.snippet }}</p>
+                            <div class="av-nb-note-card__path">
+                                <span *ngFor="let p of r.pathNames; let last = last">
+                                    {{ p }}<span *ngIf="!last"> › </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- Notes list (when not searching) -->
+                <ng-container *ngIf="!searchResults">
+
+                    <!-- Loading -->
+                    <div class="av-nb-empty" *ngIf="loadingNotes">
+                        <span class="av-spinner-sm"></span>
+                    </div>
+
+                    <!-- Empty -->
+                    <div class="av-nb-empty" *ngIf="!loadingNotes && notes.length === 0">
+                        <p>No notes in this topic</p>
+                    </div>
+
+                    <!-- Notes grid -->
+                    <div class="av-nb-notes-grid" *ngIf="!loadingNotes && notes.length > 0">
+                        <div class="av-nb-note-card" *ngFor="let note of notes" (click)="openEditNote(note)">
+                            <h3 class="av-nb-note-card__title">{{ note.title }}</h3>
+                            <p class="av-nb-note-card__snippet">{{ note.content }}</p>
+                            <div class="av-nb-note-card__footer">
+                                <span class="av-nb-note-card__action">
+                                    Edit
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <!-- ─── Note Editor Modal ─── -->
+                <div class="av-nb-editor-overlay" *ngIf="showNoteEditor" (click)="closeNoteEditor()">
+                    <div class="av-nb-editor" (click)="$event.stopPropagation()">
+                        <div class="av-nb-editor__header">
+                            <h3 class="av-nb-editor__title">
+                                {{ editingNote ? 'Edit Note' : 'New Note' }}
+                            </h3>
+                            <button class="av-nb-icon-btn" (click)="closeNoteEditor()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="av-nb-editor__body">
+                            <div class="av-field">
+                                <label class="av-label">Title</label>
+                                <input class="av-nb-input av-nb-input--lg" [(ngModel)]="noteTitle"
+                                    placeholder="Note title..." />
+                            </div>
+                            <div class="av-field">
+                                <label class="av-label">Content</label>
+                                <textarea class="av-nb-textarea" [(ngModel)]="noteContent"
+                                    placeholder="Write your note..." rows="10"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="av-nb-editor__footer">
+                            <button class="av-btn av-btn--ghost" (click)="closeNoteEditor()">Cancel</button>
+                            <button class="av-btn av-btn--primary" (click)="saveNote()"
+                                [disabled]="savingNote || !noteTitle.trim()">
+                                <span *ngIf="!savingNote">{{ editingNote ? 'Update' : 'Create' }}</span>
+                                <span *ngIf="savingNote" class="av-spinner-sm"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </ng-container>
+        </main>
+
+    </div>
+
+</div>

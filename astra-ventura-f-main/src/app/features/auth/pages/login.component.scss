@@ -332,10 +332,9 @@
   border-radius: 0.5rem;
   padding: 0.875rem 0.875rem 0.875rem 2.75rem;
   color: var(--text-main);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
