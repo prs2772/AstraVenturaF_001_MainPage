@@ -1,4 +1,4 @@
-:host {
+﻿:host {
   --primary: #135bec;
   --primary-dim: rgba(19, 91, 236, 0.08);
   --primary-border: rgba(19, 91, 236, 0.2);
@@ -37,7 +37,6 @@
   font-size: 1.4rem;
   font-weight: 700;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   margin: 0 0 0.25rem;
   color: var(--text-main);
 }
@@ -45,7 +44,6 @@
 .av-page__subtitle {
   font-size: 0.65rem;
   letter-spacing: 0.12em;
-  text-transform: uppercase;
   color: var(--text-sub);
   margin: 0;
 }
@@ -67,7 +65,6 @@
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: 0.12em;
-  text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
   border: none;
@@ -137,7 +134,6 @@
 .av-state-label {
   font-size: 0.7rem;
   letter-spacing: 0.15em;
-  text-transform: uppercase;
   color: var(--text-muted);
 }
 
@@ -165,7 +161,6 @@
   border-radius: 0.5rem;
   font-size: 0.7rem;
   letter-spacing: 0.05em;
-  text-transform: uppercase;
 }
 
 .av-alert svg {
@@ -194,7 +189,6 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
   padding: 0.25rem 0.625rem;
   border-radius: 0.25rem;
   cursor: pointer;
@@ -257,7 +251,6 @@
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
   color: var(--text-main);
   margin: 0 0 0.2rem;
 }
@@ -265,7 +258,6 @@
 .av-vehicle-card__sub {
   font-size: 0.6rem;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--text-muted);
   margin: 0;
 }
@@ -287,7 +279,6 @@
 .av-stat__label {
   font-size: 0.55rem;
   letter-spacing: 0.15em;
-  text-transform: uppercase;
   color: var(--text-muted);
 }
 
@@ -346,7 +337,6 @@
 .av-label {
   font-size: 0.6rem;
   letter-spacing: 0.2em;
-  text-transform: uppercase;
   color: var(--primary);
   padding-left: 0.25rem;
 }
@@ -409,7 +399,6 @@
 .av-field-error {
   font-size: 0.6rem;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: #f87171;
   padding-left: 0.25rem;
 }
@@ -443,7 +432,6 @@
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--text-main);
   margin: 0;
   display: flex;
@@ -458,7 +446,6 @@
   border-radius: 9999px;
   font-size: 0.55rem;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
   font-weight: 700;
 }
 
@@ -537,7 +524,6 @@
   font-family: var(--font-mono);
   font-size: 0.65rem;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -567,7 +553,6 @@
   text-align: left;
   font-size: 0.6rem;
   letter-spacing: 0.2em;
-  text-transform: uppercase;
   color: var(--primary);
   border-bottom: 1px solid var(--primary-border);
 }

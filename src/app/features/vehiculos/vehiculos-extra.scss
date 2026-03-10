@@ -1,4 +1,4 @@
-.av-form-submit {
+﻿.av-form-submit {
   display: flex;
   justify-content: flex-end;
   padding-top: 0.5rem;
@@ -41,7 +41,6 @@
 .av-section-label {
   font-size: 0.6rem;
   letter-spacing: 0.2em;
-  text-transform: uppercase;
   color: var(--text-muted);
   margin: 0 0 0.75rem;
 }
@@ -73,6 +72,5 @@
 .av-breakdown-item__name {
   font-size: 0.65rem;
   letter-spacing: 0.04em;
-  text-transform: uppercase;
   color: var(--text-sub);
 }

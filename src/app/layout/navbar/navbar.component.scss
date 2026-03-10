@@ -1,4 +1,4 @@
-:host {
+﻿:host {
   --primary: #135bec;
   --primary-border: rgba(19, 91, 236, 0.2);
   --bg-dark: #080a0f;
@@ -56,7 +56,6 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   letter-spacing: 0.2em;
-  text-transform: uppercase;
   color: rgba(19, 91, 236, 0.6);
 }
 
@@ -94,7 +93,6 @@
   font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--text-sub);
 }
 
@@ -118,7 +116,6 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   letter-spacing: 0.15em;
-  text-transform: uppercase;
   cursor: pointer;
   transition: color 0.2s, border-color 0.2s, background 0.2s;
 }

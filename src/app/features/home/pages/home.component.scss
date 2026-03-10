@@ -1,4 +1,4 @@
-:host {
+﻿:host {
     --primary: #135bec;
     --primary-dim: rgba(19, 91, 236, 0.08);
     --primary-border: rgba(19, 91, 236, 0.2);
@@ -34,7 +34,6 @@
     font-size: 1.4rem;
     font-weight: 700;
     letter-spacing: 0.08em;
-    text-transform: uppercase;
     margin: 0 0 0.25rem;
     color: var(--text-main);
 }
@@ -42,7 +41,6 @@
 .av-page__subtitle {
     font-size: 0.65rem;
     letter-spacing: 0.12em;
-    text-transform: uppercase;
     color: var(--text-sub);
     margin: 0;
 }
@@ -101,7 +99,6 @@
     display: block;
     font-size: 0.55rem;
     letter-spacing: 0.15em;
-    text-transform: uppercase;
     color: var(--text-muted);
 }
 
@@ -117,7 +114,6 @@
     font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.18em;
-    text-transform: uppercase;
     color: var(--primary);
     margin: 0;
     white-space: nowrap;
@@ -190,7 +186,6 @@
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.06em;
-    text-transform: uppercase;
     color: var(--text-main);
     margin: 0;
 }
@@ -215,7 +210,6 @@
     gap: 0.3rem;
     font-size: 0.6rem;
     letter-spacing: 0.12em;
-    text-transform: uppercase;
     color: var(--text-muted);
     transition: color 0.2s;
 }

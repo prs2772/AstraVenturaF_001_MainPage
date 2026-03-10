@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { marked } from 'marked';
 import { NotebookApiService } from '../services/notebook-api.service';
 import { TopicRes } from '../models/topic-res.model';
 import { NoteRes, SearchNoteRes } from '../models/note-res.model';
@@ -42,19 +44,37 @@ export class NotebookComponent implements OnInit {
     newSubtopicName = '';
     creatingSubtopic = false;
 
-    // Create / edit note
+    // View / Edit note modal
     showNoteEditor = false;
     editingNote: NoteRes | null = null;
     noteTitle = '';
     noteContent = '';
+    notePreviewHtml: SafeHtml = '';
+    previewMode = true;   // true = leer renderizado, false = editar textarea
+    loadingNoteContent = false;
     savingNote = false;
+
+    deletingNote = false;
 
     error: string | null = null;
 
-    constructor(private api: NotebookApiService) { }
+    constructor(
+        private api: NotebookApiService,
+        private sanitizer: DomSanitizer
+    ) {
+        // Configure marked renderer options
+        marked.setOptions({ breaks: true, gfm: true });
+    }
 
     ngOnInit() {
         this.loadRootTopics();
+    }
+
+    // ── Markdown rendering ─────────────────────────────
+
+    renderMarkdown(content: string): SafeHtml {
+        const html = marked.parse(content ?? '') as string;
+        return this.sanitizer.bypassSecurityTrustHtml(html);
     }
 
     // ── Topics ────────────────────────────────────────
@@ -199,20 +219,48 @@ export class NotebookComponent implements OnInit {
         this.searchResults = null;
     }
 
-    // ── Note Editor ───────────────────────────────────
+    // ── Note Viewer / Editor ───────────────────────────
+
+    /** Abre una nota existente: carga el contenido completo desde el API */
+    openViewNote(note: NoteRes) {
+        this.editingNote = note;
+        this.noteTitle = note.title;
+        this.noteContent = '';
+        this.notePreviewHtml = '';
+        this.previewMode = true;
+        this.loadingNoteContent = true;
+        this.showNoteEditor = true;
+
+        this.api.getNote(note.id).subscribe({
+            next: fullNote => {
+                this.noteContent = fullNote.content ?? '';
+                this.notePreviewHtml = this.renderMarkdown(this.noteContent);
+                this.loadingNoteContent = false;
+            },
+            error: () => {
+                // fallback: mostrar el snippet que ya teníamos
+                this.noteContent = note.content ?? '';
+                this.notePreviewHtml = this.renderMarkdown(this.noteContent);
+                this.loadingNoteContent = false;
+            }
+        });
+    }
 
     openNewNote() {
         this.editingNote = null;
         this.noteTitle = '';
         this.noteContent = '';
+        this.notePreviewHtml = '';
+        this.previewMode = false;   // nueva nota, directamente al editor
         this.showNoteEditor = true;
     }
 
-    openEditNote(note: NoteRes) {
-        this.editingNote = note;
-        this.noteTitle = note.title;
-        this.noteContent = note.content;
-        this.showNoteEditor = true;
+    togglePreviewMode() {
+        if (!this.previewMode) {
+            // Cambiar a preview: renderizar contenido actual
+            this.notePreviewHtml = this.renderMarkdown(this.noteContent);
+        }
+        this.previewMode = !this.previewMode;
     }
 
     closeNoteEditor() {
@@ -220,6 +268,8 @@ export class NotebookComponent implements OnInit {
         this.editingNote = null;
         this.noteTitle = '';
         this.noteContent = '';
+        this.notePreviewHtml = '';
+        this.previewMode = true;
     }
 
     saveNote() {
@@ -253,5 +303,19 @@ export class NotebookComponent implements OnInit {
                 error: () => { this.savingNote = false; }
             });
         }
+    }
+
+    deleteCurrentNote() {
+        if (!this.editingNote) return;
+        if (!confirm(`Delete note "${this.editingNote.title}"?`)) return;
+        this.deletingNote = true;
+        this.api.deleteNote(this.editingNote.id).subscribe({
+            next: () => {
+                this.deletingNote = false;
+                this.closeNoteEditor();
+                this.loadNotes(this.selectedTopic!.id);
+            },
+            error: () => { this.deletingNote = false; }
+        });
     }
 }

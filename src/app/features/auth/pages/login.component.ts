@@ -57,12 +57,15 @@ export class LoginComponent {
       error: err => {
         this.loading = false;
 
+        const msg = (e: any) =>
+          e?.error?.Message || e?.error?.message || e?.error?.title || e?.message;
+
         if (err.status === 0) {
-          this.error = 'Unable to connect to server. Check your network or CORS configuration.';
+          this.error = 'Unable to connect to server. Check your network.';
         } else if (err.status === 401) {
-          this.error = err?.error?.message ?? 'Invalid credentials. Check your email and password.';
+          this.error = msg(err) ?? 'Invalid credentials. Check your email and password.';
         } else {
-          this.error = err?.error?.message ?? `Server error (${err.status}). Try again later.`;
+          this.error = msg(err) ?? `Server error (${err.status}). Try again later.`;
         }
       }
     });

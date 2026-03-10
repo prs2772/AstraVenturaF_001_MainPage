@@ -1,4 +1,4 @@
-/* Variables */
+﻿/* Variables */
 :host {
   --primary: #135bec;
   --primary-dim: rgba(19, 91, 236, 0.15);
@@ -67,6 +67,8 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .av-brand-icon {
@@ -92,7 +94,6 @@
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--text-main);
   margin: 0;
 }
@@ -100,7 +101,6 @@
 .av-brand-sub {
   font-size: 0.6rem;
   letter-spacing: 0.25em;
-  text-transform: uppercase;
   color: var(--primary);
   margin: 0;
   opacity: 0.8;
@@ -159,7 +159,6 @@
 .av-hud-label {
   font-size: 0.6rem;
   letter-spacing: 0.2em;
-  text-transform: uppercase;
   color: rgba(19, 91, 236, 0.6);
 }
 
@@ -208,7 +207,6 @@
   font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--text-main);
   margin: 0 0 0.5rem;
 }
@@ -216,7 +214,6 @@
 .av-panel-subtitle {
   font-size: 0.65rem;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: var(--text-sub);
   margin: 0;
 }
@@ -233,7 +230,6 @@
   color: #f87171;
   font-size: 0.7rem;
   letter-spacing: 0.05em;
-  text-transform: uppercase;
   margin-bottom: 1.25rem;
 }
 
@@ -259,7 +255,6 @@
 .av-label {
   font-size: 0.6rem;
   letter-spacing: 0.2em;
-  text-transform: uppercase;
   color: var(--primary);
   padding-left: 0.25rem;
 }
@@ -298,7 +293,6 @@
   font-family: var(--font-mono);
   font-size: 0.75rem;
   letter-spacing: 0.05em;
-  text-transform: uppercase;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
@@ -344,7 +338,6 @@
 .av-field-error {
   font-size: 0.6rem;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: #f87171;
   padding-left: 0.25rem;
 }
@@ -366,7 +359,6 @@
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.2em;
-  text-transform: uppercase;
   cursor: pointer;
   transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
   box-shadow: 0 0 25px rgba(19, 91, 236, 0.4);
@@ -413,7 +405,6 @@
   margin-top: 1.25rem;
   font-size: 0.65rem;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--text-sub);
 }
 
@@ -438,7 +429,6 @@
   padding: 1rem 1.5rem;
   font-size: 0.6rem;
   letter-spacing: 0.15em;
-  text-transform: uppercase;
   color: var(--text-muted);
   background: rgba(8, 10, 15, 0.2);
 }

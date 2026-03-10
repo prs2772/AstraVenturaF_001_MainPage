@@ -45,12 +45,21 @@ export class NotebookApiService {
         return this.http.put<NoteRes>(`${this.base}/notes/${id}`, req);
     }
 
+    /** Get a single note by ID (full content) */
+    getNote(id: string) {
+        return this.http.get<NoteRes>(`${this.base}/notes/${id}`);
+    }
+
     searchNotes(req: SearchNotesReq) {
         const params = new HttpParams()
             .set('topicId', req.topicId)
             .set('searchTerm', req.searchTerm);
 
         return this.http.get<SearchNoteRes[]>(`${this.base}/notes/search`, { params });
+    }
+
+    deleteNote(id: string) {
+        return this.http.delete<void>(`${this.base}/notes/${id}`);
     }
 
 }

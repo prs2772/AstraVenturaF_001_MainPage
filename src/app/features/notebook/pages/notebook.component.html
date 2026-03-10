@@ -197,7 +197,8 @@
                         <p>No results found</p>
                     </div>
                     <div class="av-nb-notes-grid" *ngIf="searchResults.length > 0">
-                        <div class="av-nb-note-card" *ngFor="let r of searchResults">
+                        <div class="av-nb-note-card" *ngFor="let r of searchResults"
+                             (click)="openViewNote({ id: r.noteId, title: r.title, content: r.snippet, topicAncestors: r.pathNames })">
                             <h3 class="av-nb-note-card__title">{{ r.title }}</h3>
                             <p class="av-nb-note-card__snippet">{{ r.snippet }}</p>
                             <div class="av-nb-note-card__path">
@@ -224,15 +225,16 @@
 
                     <!-- Notes grid -->
                     <div class="av-nb-notes-grid" *ngIf="!loadingNotes && notes.length > 0">
-                        <div class="av-nb-note-card" *ngFor="let note of notes" (click)="openEditNote(note)">
+                        <div class="av-nb-note-card" *ngFor="let note of notes" (click)="openViewNote(note)">
                             <h3 class="av-nb-note-card__title">{{ note.title }}</h3>
                             <p class="av-nb-note-card__snippet">{{ note.content }}</p>
                             <div class="av-nb-note-card__footer">
                                 <span class="av-nb-note-card__action">
-                                    Edit
+                                    Open
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
-                                        <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                                        <polyline points="15 3 21 3 21 9" />
+                                        <line x1="10" y1="14" x2="21" y2="3" />
                                     </svg>
                                 </span>
                             </div>
@@ -240,13 +242,37 @@
                     </div>
                 </ng-container>
 
-                <!-- ─── Note Editor Modal ─── -->
+                <!-- ─── Note Viewer / Editor Modal ─── -->
                 <div class="av-nb-editor-overlay" *ngIf="showNoteEditor" (click)="closeNoteEditor()">
-                    <div class="av-nb-editor" (click)="$event.stopPropagation()">
+                    <div class="av-nb-editor av-nb-editor--wide" (click)="$event.stopPropagation()">
+
+                        <!-- Header -->
                         <div class="av-nb-editor__header">
-                            <h3 class="av-nb-editor__title">
-                                {{ editingNote ? 'Edit Note' : 'New Note' }}
-                            </h3>
+                            <div class="av-nb-editor__header-left">
+                                <h3 class="av-nb-editor__title">{{ editingNote ? noteTitle : 'New Note' }}</h3>
+
+                                <!-- Preview / Edit toggle (solo cuando hay nota existente) -->
+                                <div class="av-nb-editor__tabs" *ngIf="editingNote && !loadingNoteContent">
+                                    <button class="av-nb-tab" [class.av-nb-tab--active]="previewMode"
+                                        (click)="previewMode = true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                        Preview
+                                    </button>
+                                    <button class="av-nb-tab" [class.av-nb-tab--active]="!previewMode"
+                                        (click)="previewMode = false">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                        </svg>
+                                        Edit
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Close -->
                             <button class="av-nb-icon-btn" (click)="closeNoteEditor()">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <line x1="18" y1="6" x2="6" y2="18" />
@@ -255,26 +281,63 @@
                             </button>
                         </div>
 
+                        <!-- Body -->
                         <div class="av-nb-editor__body">
-                            <div class="av-field">
-                                <label class="av-label">Title</label>
-                                <input class="av-nb-input av-nb-input--lg" [(ngModel)]="noteTitle"
-                                    placeholder="Note title..." />
+
+                            <!-- Loading note content -->
+                            <div class="av-nb-empty" *ngIf="loadingNoteContent">
+                                <span class="av-spinner-sm"></span>
+                                <p>Loading note…</p>
                             </div>
-                            <div class="av-field">
-                                <label class="av-label">Content</label>
-                                <textarea class="av-nb-textarea" [(ngModel)]="noteContent"
-                                    placeholder="Write your note..." rows="10"></textarea>
-                            </div>
+
+                            <ng-container *ngIf="!loadingNoteContent">
+
+                                <!-- PREVIEW MODE: Markdown renderizado -->
+                                <ng-container *ngIf="previewMode && editingNote">
+                                    <div class="av-nb-markdown" [innerHTML]="notePreviewHtml"></div>
+                                </ng-container>
+
+                                <!-- EDIT MODE (o nueva nota) -->
+                                <ng-container *ngIf="!previewMode || !editingNote">
+                                    <div class="av-field">
+                                        <label class="av-label">Title</label>
+                                        <input class="av-nb-input av-nb-input--lg" [(ngModel)]="noteTitle"
+                                            placeholder="Note title..." />
+                                    </div>
+                                    <div class="av-field">
+                                        <label class="av-label">
+                                            Content
+                                            <span class="av-nb-md-hint">Supports Markdown</span>
+                                        </label>
+                                        <textarea class="av-nb-textarea" [(ngModel)]="noteContent"
+                                            placeholder="Write your note in Markdown..." rows="16"></textarea>
+                                    </div>
+                                </ng-container>
+
+                            </ng-container>
                         </div>
 
+                        <!-- Footer -->
                         <div class="av-nb-editor__footer">
-                            <button class="av-btn av-btn--ghost" (click)="closeNoteEditor()">Cancel</button>
-                            <button class="av-btn av-btn--primary" (click)="saveNote()"
-                                [disabled]="savingNote || !noteTitle.trim()">
-                                <span *ngIf="!savingNote">{{ editingNote ? 'Update' : 'Create' }}</span>
-                                <span *ngIf="savingNote" class="av-spinner-sm"></span>
+                            <!-- Delete (solo notas existentes) -->
+                            <button class="av-btn av-btn--danger av-btn--sm" *ngIf="editingNote"
+                                (click)="deleteCurrentNote()" [disabled]="deletingNote">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6" />
+                                    <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                                    <path d="M10 11v6M14 11v6M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+                                </svg>
+                                Delete
                             </button>
+
+                            <div class="av-nb-editor__footer-right">
+                                <button class="av-btn av-btn--ghost" (click)="closeNoteEditor()">Close</button>
+                                <button class="av-btn av-btn--primary" *ngIf="!previewMode || !editingNote"
+                                    (click)="saveNote()" [disabled]="savingNote || !noteTitle.trim()">
+                                    <span *ngIf="!savingNote">{{ editingNote ? 'Update' : 'Create' }}</span>
+                                    <span *ngIf="savingNote" class="av-spinner-sm"></span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

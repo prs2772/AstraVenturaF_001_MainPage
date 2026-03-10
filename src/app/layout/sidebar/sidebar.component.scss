@@ -1,4 +1,4 @@
-:host {
+﻿:host {
   --primary: #135bec;
   --primary-dim: rgba(19, 91, 236, 0.1);
   --primary-border: rgba(19, 91, 236, 0.2);
@@ -70,7 +70,6 @@
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.12em;
-  text-transform: uppercase;
   color: var(--text-main);
   white-space: nowrap;
   overflow: hidden;
@@ -142,7 +141,6 @@
   font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.05em;
-  text-transform: uppercase;
   white-space: nowrap;
   transition: background 0.15s, color 0.15s;
   position: relative;
@@ -199,7 +197,6 @@
 .av-nav-category__title {
   font-size: 0.55rem;
   letter-spacing: 0.25em;
-  text-transform: uppercase;
   color: var(--text-muted);
   padding: 0 0.75rem 0.4rem;
   margin: 0;

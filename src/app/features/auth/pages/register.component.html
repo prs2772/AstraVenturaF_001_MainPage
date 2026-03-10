@@ -5,7 +5,7 @@
   <div class="av-layout">
 
     <header class="av-header">
-      <div class="av-brand">
+      <a routerLink="/home" class="av-brand">
         <div class="av-brand-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M12 2L8 8H2l4.5 7L4 21l8-3 8 3-2.5-6L22 8h-6L12 2z" />
@@ -15,7 +15,7 @@
           <h2 class="av-brand-name">AstraVentura</h2>
           <p class="av-brand-sub">Crew Registration v1.0</p>
         </div>
-      </div>
+      </a>
     </header>
 
     <main class="av-main">
@@ -149,9 +149,12 @@
                   </svg>
                 </button>
               </div>
-              <span class="av-field-error" *ngIf="password.errors?.['minlength'] && password.touched">
-                Min 6 characters required
+              <span class="av-field-error" *ngIf="password.errors?.['required'] && password.touched">
+                Password requerido
               </span>
+              <ng-container *ngIf="passwordErrors.length > 0 && password.touched">
+                <span class="av-field-error" *ngFor="let e of passwordErrors">✕ {{ e }}</span>
+              </ng-container>
             </div>
 
             <!-- Confirm Password -->
