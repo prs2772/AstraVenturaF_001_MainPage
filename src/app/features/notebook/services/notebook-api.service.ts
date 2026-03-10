@@ -51,11 +51,17 @@ export class NotebookApiService {
     }
 
     searchNotes(req: SearchNotesReq) {
-        const params = new HttpParams()
-            .set('topicId', req.topicId)
-            .set('searchTerm', req.searchTerm);
+        let params = new HttpParams().set('topicId', req.topicId);
+        if (req.searchTerm) {
+            params = params.set('searchTerm', req.searchTerm);
+        }
 
         return this.http.get<SearchNoteRes[]>(`${this.base}/notes/search`, { params });
+    }
+
+    // Pedimos las notas de un topic ID
+    getNotesByTopic(topicId: string) {
+        return this.http.get<SearchNoteRes[]>(`${this.base}/notes/topic/${topicId}`);
     }
 
     deleteNote(id: string) {

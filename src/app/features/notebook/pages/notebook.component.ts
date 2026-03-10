@@ -186,14 +186,22 @@ export class NotebookComponent implements OnInit {
 
     loadNotes(topicId: string) {
         this.loadingNotes = true;
-        this.api.searchNotes({ topicId, searchTerm: '' }).subscribe({
+        this.api.getNotesByTopic(topicId).subscribe({
             next: data => {
-                this.notes = data.map(d => ({
-                    id: d.noteId,
-                    title: d.title,
-                    content: d.snippet,
-                    topicAncestors: d.pathNames
-                }));
+                this.notes = data.map(d => {
+                    // Si el último ancestro es igual al nombre del topic seleccionado, es hijo directo
+                    const isDirectChild = d.pathNames.length > 0 && this.selectedTopic
+                        ? d.pathNames[d.pathNames.length - 1] === this.selectedTopic.name
+                        : false;
+
+                    return {
+                        id: d.noteId,
+                        title: d.title,
+                        content: d.snippet, // Ya nos llega completo desde el backend
+                        topicAncestors: d.pathNames,
+                        isDirectChild
+                    };
+                });
                 this.loadingNotes = false;
             },
             error: () => { this.loadingNotes = false; }

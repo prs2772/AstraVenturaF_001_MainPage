@@ -198,9 +198,11 @@
                     </div>
                     <div class="av-nb-notes-grid" *ngIf="searchResults.length > 0">
                         <div class="av-nb-note-card" *ngFor="let r of searchResults"
-                             (click)="openViewNote({ id: r.noteId, title: r.title, content: r.snippet, topicAncestors: r.pathNames })">
+                            (click)="openViewNote({ id: r.noteId, title: r.title, content: r.snippet, topicAncestors: r.pathNames })">
                             <h3 class="av-nb-note-card__title">{{ r.title }}</h3>
-                            <p class="av-nb-note-card__snippet">{{ r.snippet }}</p>
+                            <p class="av-nb-note-card__snippet" *ngIf="r.snippet">{{ (r.snippet | slice:0:150) +
+                                (r.snippet.length > 150
+                                ? '...' : '') }}</p>
                             <div class="av-nb-note-card__path">
                                 <span *ngFor="let p of r.pathNames; let last = last">
                                     {{ p }}<span *ngIf="!last"> › </span>
@@ -227,7 +229,15 @@
                     <div class="av-nb-notes-grid" *ngIf="!loadingNotes && notes.length > 0">
                         <div class="av-nb-note-card" *ngFor="let note of notes" (click)="openViewNote(note)">
                             <h3 class="av-nb-note-card__title">{{ note.title }}</h3>
-                            <p class="av-nb-note-card__snippet">{{ note.content }}</p>
+                            <p class="av-nb-note-card__snippet" *ngIf="note.isDirectChild && note.content">
+                                {{ (note.content | slice:0:150) + (note.content.length > 150 ? '...' : '') }}
+                            </p>
+                            <!-- Si NO es hijo directo, podemos mostrar la ruta o nada -->
+                            <div class="av-nb-note-card__path" *ngIf="!note.isDirectChild">
+                                <span *ngFor="let p of note.topicAncestors; let last = last">
+                                    {{ p }}<span *ngIf="!last"> › </span>
+                                </span>
+                            </div>
                             <div class="av-nb-note-card__footer">
                                 <span class="av-nb-note-card__action">
                                     Open
@@ -256,16 +266,16 @@
                                     <button class="av-nb-tab" [class.av-nb-tab--active]="previewMode"
                                         (click)="previewMode = true">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                            <circle cx="12" cy="12" r="3"/>
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                            <circle cx="12" cy="12" r="3" />
                                         </svg>
                                         Preview
                                     </button>
                                     <button class="av-nb-tab" [class.av-nb-tab--active]="!previewMode"
                                         (click)="previewMode = false">
                                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
-                                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
                                         </svg>
                                         Edit
                                     </button>
