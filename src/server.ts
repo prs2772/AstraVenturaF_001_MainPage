@@ -10,7 +10,15 @@ import { join } from 'node:path';
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
-const angularApp = new AngularNodeAppEngine();
+const angularApp = new AngularNodeAppEngine({
+  allowedHosts: [
+    'avf-main-bbh7bqaudgcehgfx.mexicocentral-01.azurewebsites.net', // URL temporal de azure
+    '169.254.129.2', // La IP interna que usa Azure para revisar si la app está viva
+    'astraventurauniversal.com',
+    'www.astraventurauniversal.com',
+    'localhost'
+  ]
+});
 
 /**
  * Example Express Rest API endpoints can be defined here.
@@ -53,12 +61,13 @@ app.use((req, res, next) => {
  */
 if (isMainModule(import.meta.url) || process.env['pm_id']) {
   const port = process.env['PORT'] || 4000;
-  app.listen(port, (error) => {
+  // Agregamos '0.0.0.0' para abrir la red al exterior
+  app.listen(Number(port), '0.0.0.0', (error) => {
     if (error) {
       throw error;
     }
 
-    console.log(`Node Express server listening on http://localhost:${port}`);
+    console.log(`Node Express server listening on http://0.0.0.0:${port}`);
   });
 }
 
