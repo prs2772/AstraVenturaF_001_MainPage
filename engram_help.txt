@@ -1,0 +1,43 @@
+engram v1.10.0 — Persistent memory for AI coding agents
+
+Usage:
+  engram <command> [arguments]
+
+Commands:
+  serve [port]       Start HTTP API server (default: 7437)
+  mcp [--tools=PROFILE] Start MCP server (stdio transport, for any AI agent)
+                       Profiles: agent (11 tools), admin (3 tools), all (default, 14)
+                       Combine: --tools=agent,admin or pick individual tools
+                       Example: engram mcp --tools=agent
+  tui                Launch interactive terminal UI
+  search <query>     Search memories [--type TYPE] [--project PROJECT] [--scope SCOPE] [--limit N]
+  save <title> <msg> Save a memory  [--type TYPE] [--project PROJECT] [--scope SCOPE]
+  timeline <obs_id>  Show chronological context around an observation [--before N] [--after N]
+  context [project]  Show recent context from previous sessions
+  stats              Show memory system statistics
+  export [file]      Export all memories to JSON (default: engram-export.json)
+  import <file>      Import memories from a JSON export file
+  setup [agent]      Install/setup agent integration (opencode, claude-code, gemini-cli, codex)
+  sync               Export new memories as compressed chunk to .engram/
+                       --import   Import new chunks from .engram/ into local DB
+                       --status   Show sync status (local vs remote chunks)
+                       --project  Filter export to a specific project
+                       --all      Export ALL projects (ignore directory-based filter)
+
+  version            Print version
+  help               Show this help
+
+Environment:
+  ENGRAM_DATA_DIR    Override data directory (default: ~/.engram)
+  ENGRAM_PORT        Override HTTP server port (default: 7437)
+
+MCP Configuration (add to your agent's config):
+  {
+    "mcp": {
+      "engram": {
+        "type": "stdio",
+        "command": "engram",
+        "args": ["mcp", "--tools=agent"]
+      }
+    }
+  }
