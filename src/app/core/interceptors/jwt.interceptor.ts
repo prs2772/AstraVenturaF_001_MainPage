@@ -32,7 +32,7 @@ export class JwtInterceptor implements HttpInterceptor {
 
                 if (error instanceof HttpErrorResponse
                     && error.status === 401
-                    && !req.url.includes('/auth/refresh')) {
+                    && !req.url.includes('/refresh')) {
                     return this.handle401Error(req, next);
                 }
 
