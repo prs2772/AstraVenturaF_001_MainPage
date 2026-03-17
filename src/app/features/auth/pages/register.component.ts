@@ -3,27 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
-
-// Valida exactamente las reglas del backend Password Value Object
-function strongPasswordValidator(control: AbstractControl): ValidationErrors | null {
-  const value: string = control.value ?? '';
-  if (!value) return null; // minLength validator cubre el caso vacío
-
-  const errors: string[] = [];
-
-  if (value.length < 8)
-    errors.push('Min. 8 caracteres');
-  if (!/[A-Z]/.test(value))
-    errors.push('Una mayúscula');
-  if (!/[a-z]/.test(value))
-    errors.push('Una minúscula');
-  if (!/[0-9]/.test(value))
-    errors.push('Un número');
-  if (!/[!#$&/()=.]/.test(value))
-    errors.push('Un símbolo: !#$&/()=.');
-
-  return errors.length > 0 ? { strongPassword: errors } : null;
-}
+import { strongPasswordValidator } from '../../../shared/validators/password.validator';
 
 @Component({
   standalone: true,

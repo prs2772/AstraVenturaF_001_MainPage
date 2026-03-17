@@ -74,7 +74,7 @@
                   </svg>
                 </span>
                 <input class="av-input" type="email" formControlName="email" placeholder="COMMANDER@GALACTIC.NET"
-                  autocomplete="email" />
+                  autocomplete="email" tabindex="1" />
               </div>
               <span class="av-field-error" *ngIf="email.errors?.['required'] && email.touched">
                 Identifier required
@@ -95,8 +95,8 @@
                   </svg>
                 </span>
                 <input class="av-input" [type]="showPassword ? 'text' : 'password'" formControlName="password"
-                  placeholder="••••••••••••" autocomplete="current-password" />
-                <button type="button" class="av-input-toggle" (click)="togglePassword()">
+                  placeholder="••••••••••••" autocomplete="current-password" tabindex="2" />
+                <button type="button" class="av-input-toggle" (click)="togglePassword()" tabindex="-1">
                   <svg *ngIf="!showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
                     <circle cx="12" cy="12" r="3" />
@@ -113,8 +113,16 @@
               </span>
             </div>
 
+            <!-- Bottom row -->
+            <div class="av-form-footer">
+              <label class="av-checkbox-label">
+                <input type="checkbox" formControlName="remember" class="av-checkbox" tabindex="3" />
+                <span>Maintain Uplink</span>
+              </label>
+            </div>
+
             <!-- Submit -->
-            <button class="av-btn-primary" type="submit" [disabled]="loading">
+            <button class="av-btn-primary" type="submit" [disabled]="loading" tabindex="4">
               <span *ngIf="!loading">Initiate Launch</span>
               <span *ngIf="loading" class="av-spinner"></span>
               <svg *ngIf="!loading" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -123,13 +131,8 @@
               </svg>
             </button>
 
-            <!-- Bottom row -->
-            <div class="av-form-footer">
-              <label class="av-checkbox-label">
-                <input type="checkbox" formControlName="remember" class="av-checkbox" />
-                <span>Maintain Uplink</span>
-              </label>
-              <a routerLink="/recover-password" class="av-link">Abort &amp; Recover</a>
+            <div class="av-form-footer" style="justify-content: center; margin-top: -0.5rem;">
+              <a routerLink="/recover-password" class="av-link" tabindex="5">Abort &amp; Recover</a>
             </div>
 
           </form>

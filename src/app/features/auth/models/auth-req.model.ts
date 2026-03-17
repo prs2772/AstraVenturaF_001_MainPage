@@ -23,3 +23,8 @@ export interface ResetPasswordReq {
     token: string;
     newPassword: string;
 }
+
+export interface ChangePasswordReq {
+    currentPassword: string;
+    newPassword: string;
+}

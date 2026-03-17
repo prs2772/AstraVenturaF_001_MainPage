@@ -44,6 +44,12 @@ export const routes: Routes = [
                         .then(m => m.HomeComponent)
             },
             {
+                path: 'auth/change-password',
+                loadComponent: () =>
+                    import('./features/auth/pages/change-password.component')
+                        .then(m => m.ChangePasswordComponent)
+            },
+            {
                 path: 'notebook',
                 loadComponent: () =>
                     import('./features/notebook/pages/notebook.component')

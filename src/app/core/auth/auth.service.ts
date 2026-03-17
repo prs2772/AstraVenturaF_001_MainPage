@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap, of, delay } from 'rxjs';
 import { apis } from '../../../environments/apis.environment';
-import { CredentialsReq, RecoverPasswordReq, RefreshTokenReq, RegisterNewReq, ResetPasswordReq } from '../../features/auth/models/auth-req.model';
+import { CredentialsReq, RecoverPasswordReq, RefreshTokenReq, RegisterNewReq, ResetPasswordReq, ChangePasswordReq } from '../../features/auth/models/auth-req.model';
 import { AuthRes } from '../../features/auth/models/auth-res.model';
 import { PersonIdentity } from '../../shared/models/person-identity';
 import { AuthMapper } from '../../shared/utils/mappers/auth.mapper';
@@ -58,6 +58,11 @@ export class AuthService {
       return of(undefined).pipe(delay(1500));
     }
     return this.http.post<void>(`${this.base}/reset-password`, resetReq);
+  }
+
+  // Cambiar contraseña (autenticado)
+  changePassword(changeReq: ChangePasswordReq): Observable<void> {
+    return this.http.post<void>(`${this.base}/change-password`, changeReq);
   }
 
   // Refresh Token

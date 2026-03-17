@@ -1,4 +1,4 @@
-﻿/* Variables */
+/* Variables */
 :host {
   --primary: #135bec;
   --primary-dim: rgba(19, 91, 236, 0.15);
@@ -249,10 +249,11 @@
 }
 
 .av-panel-subtitle {
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   letter-spacing: 0.1em;
   color: var(--text-sub);
   margin: 0;
+  opacity: 0.9;
 }
 
 /* Error */
@@ -290,10 +291,12 @@
 }
 
 .av-label {
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
   color: var(--primary);
   padding-left: 0.25rem;
+  text-transform: uppercase;
 }
 
 .av-input-wrap {
@@ -468,15 +471,18 @@
 }
 
 .av-link {
-  font-size: 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 600;
   letter-spacing: 0.1em;
-  color: rgba(19, 91, 236, 0.7);
+  color: #5c8eff; // Brighter than previous default
   text-decoration: none;
-  transition: color 0.2s;
+  transition: all 0.2s;
+  border-bottom: 1px border transparent;
 }
 
 .av-link:hover {
-  color: var(--primary);
+  color: #fff;
+  text-shadow: 0 0 8px var(--primary);
 }
 
 /* Telemetry */
@@ -513,10 +519,12 @@
 /* Register link */
 .av-register-link {
   text-align: center;
-  margin-top: 1.25rem;
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
-  color: var(--text-sub);
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--text-main);
+  opacity: 0.9;
 }
 
 /* Sidebar HUD */

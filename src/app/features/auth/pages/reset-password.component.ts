@@ -4,6 +4,8 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractContro
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 
+import { strongPasswordValidator } from '../../../shared/validators/password.validator';
+
 @Component({
   standalone: true,
   selector: 'app-reset-password',
@@ -27,7 +29,7 @@ export class ResetPasswordComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.form = this.fb.group({
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, strongPasswordValidator]],
       confirmPassword: ['', [Validators.required]]
     }, { validators: this.passwordMatchValidator });
   }
@@ -41,6 +43,10 @@ export class ResetPasswordComponent implements OnInit {
 
   get password() { return this.form.get('password')!; }
   get confirmPassword() { return this.form.get('confirmPassword')!; }
+
+  get passwordErrors(): string[] {
+    return this.password.errors?.['strongPassword'] ?? [];
+  }
 
   togglePassword() { this.showPassword = !this.showPassword; }
 
@@ -70,12 +76,15 @@ export class ResetPasswordComponent implements OnInit {
       next: () => {
         this.loading = false;
         this.success = true;
-        setTimeout(() => this.router.navigate(['/auth/login']), 3000);
       },
       error: err => {
         this.loading = false;
         this.error = err.error?.message || err.message || 'Restoration failed. Link may be expired.';
       }
     });
+  }
+
+  onAccept(): void {
+    this.router.navigate(['/auth/login']);
   }
 }
