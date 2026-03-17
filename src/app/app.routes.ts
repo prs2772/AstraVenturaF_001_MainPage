@@ -16,6 +16,18 @@ export const routes: Routes = [
             import('./features/auth/pages/register.component')
                 .then(m => m.RegisterComponent)
     },
+    {
+        path: 'recover-password',
+        loadComponent: () =>
+            import('./features/auth/pages/recover-password.component')
+                .then(m => m.RecoverPasswordComponent)
+    },
+    {
+        path: 'reset-password',
+        loadComponent: () =>
+            import('./features/auth/pages/reset-password.component')
+                .then(m => m.ResetPasswordComponent)
+    },
 
     // Necesitan estar dentro del ecosistema
     {

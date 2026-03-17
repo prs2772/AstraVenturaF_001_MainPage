@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, of, delay } from 'rxjs';
 import { apis } from '../../../environments/apis.environment';
-import { CredentialsReq, RefreshTokenReq, RegisterNewReq } from '../../features/auth/models/auth-req.model';
+import { CredentialsReq, RecoverPasswordReq, RefreshTokenReq, RegisterNewReq, ResetPasswordReq } from '../../features/auth/models/auth-req.model';
 import { AuthRes } from '../../features/auth/models/auth-res.model';
 import { PersonIdentity } from '../../shared/models/person-identity';
 import { AuthMapper } from '../../shared/utils/mappers/auth.mapper';
@@ -22,6 +22,11 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<PersonIdentity | null>(this.loadUser());
   currentUser$ = this.currentUserSubject.asObservable();
 
+  // MOCK MODE for early integration testing
+  private readonly MOCK_MODE = false;
+  private mockRequestCount = 0;
+  private mockLockoutTime: number | null = null;
+
   constructor(
     private http: HttpClient,
     private router: Router
@@ -39,6 +44,20 @@ export class AuthService {
     return this.http.post<AuthRes>(`${this.base}/register`, registerNew).pipe(
       tap(res => this.saveSession(res))
     );
+  }
+
+  // Recuperar contraseña
+  recoverPassword(recoverReq: RecoverPasswordReq): Observable<void> {
+    return this.http.post<void>(`${this.base}/forgot-password`, recoverReq);
+  }
+
+  // Resetear contraseña
+  resetPassword(resetReq: ResetPasswordReq): Observable<void> {
+    if (this.MOCK_MODE) {
+      console.log('MOCK: Resetting password with token', resetReq.token);
+      return of(undefined).pipe(delay(1500));
+    }
+    return this.http.post<void>(`${this.base}/reset-password`, resetReq);
   }
 
   // Refresh Token

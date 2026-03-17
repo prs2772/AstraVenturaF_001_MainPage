@@ -14,3 +14,12 @@ export interface RegisterNewReq {
     apellidoPrincipal: string;
     apellidoSecundario: string;
 }
+
+export interface RecoverPasswordReq {
+    email: string;
+}
+
+export interface ResetPasswordReq {
+    token: string;
+    newPassword: string;
+}
